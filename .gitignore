@@ -1,8 +1,8 @@
 # ============================================================
 # Large data files (Last.fm 1K dataset ~2.4GB + archive ~650MB)
 # ============================================================
-lastfm-dataset-1K/
-lastfm-dataset-1K.tar.gz
+Checkpoint 1/lastfm-dataset-1K/
+Checkpoint 1/lastfm-dataset-1K.tar.gz
 
 # ============================================================
 # Python
