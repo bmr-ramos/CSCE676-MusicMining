@@ -1,105 +1,169 @@
-# CSCE 676 — Music Listening Pattern Mining (MusicMining)
+# Music Listening Pattern Mining (MusicMining)
 
-**Author:** Bryan Ramos  
-**Course:** CSCE 676 — Data Mining and Analysis (Texas A&M University, Spring 2026)  
-**GitHub:** [bmr-ramos/CSCE676-MusicMining](https://github.com/bmr-ramos/CSCE676-MusicMining)
+> Mining 19 million Last.fm listening events to discover **artist communities** and the **bridge artists** that connect them — a unified data-mining lens on how music taste is organized.
 
-## Project Overview
+**Author:** Bryan Ramos
 
-This project applies data mining techniques to the **Last.fm 1K** dataset to investigate **artist community structure** in music co-listening behavior. The central question is: *Do music listening sessions reveal coherent artist communities, and what distinguishes the artists that bridge them?*
+**Course:** CSCE 676 — Data Mining and Analysis (Texas A&M University, Spring 2026)
 
-Three complementary mining perspectives are layered onto a shared community framework:
-- **Community detection + PageRank** (course) — identify artist clusters and cross-community bridge artists
-- **Association rule mining** (course) — characterize within- vs. cross-community co-listening patterns
-- **Sequential pattern mining** (beyond-course) — reveal temporal dynamics of how listeners navigate across communities
+**GitHub:** https://github.com/bmr-ramos/CSCE676-MusicMining
 
-## Dataset
+🎥 **Project video (2 min):** https://www.youtube.com/watch?v=64UBabpWFNI
 
-**Last.fm Dataset 1K** (Celma, 2010)  
-- **Source:** [ocelma.net](http://ocelma.net/MusicRecommendationDataset/lastfm-1K.html)
-- **Size:** 19.15M listening events, 992 users, ~177K unique artists, ~960K unique tracks
-- **Format:** Tab-separated listening histories with timestamps + user demographic profiles
-- **License:** Non-commercial research use
+👉 **Start here:** [`main_notebook.ipynb`](main_notebook.ipynb)
 
-> **Note:** The dataset is too large for GitHub (~2.4 GB). Download it directly:
-> ```bash
-> curl -L -o lastfm-dataset-1K.tar.gz "http://mtg.upf.edu/static/datasets/last.fm/lastfm-dataset-1K.tar.gz"
-> tar xzf lastfm-dataset-1K.tar.gz
-> mv lastfm-dataset-1K "Checkpoint 1/lastfm-dataset-1K"
-> ```
+---
 
-## Repository Structure
+## Project overview
 
-```
-├── README.md                           # This file
-├── .gitignore                          # Excludes dataset files, venvs, OS files
-├── Checkpoint 1/                       # EDA and dataset exploration
-│   ├── CSCE676_Checkpoint1_EDA.ipynb   # Main notebook — EDA deliverable
-│   ├── Checkpoint 1.txt                # Assignment requirements
-│   ├── README.md                       # Checkpoint 1 details
-│   ├── requirements.txt                # Python dependencies
-│   └── figures/                        # Generated EDA figures (15 plots)
-├── Checkpoint 2/                       # Research question formation
-│   ├── CSCE676_Checkpoint2_RQ.ipynb    # Main notebook — RQ deliverable
-│   ├── Checkpoint 2.txt                # Assignment requirements
-│   └── figures/                        # Generated RQ figures
-└── Checkpoint 1/lastfm-dataset-1K/     # Dataset (not tracked — download separately)
-```
+Music streaming platforms have rich data on what people *listen to*, but a much harder question is what artists *belong together* in listeners' minds. This project answers that by treating each user's listening session as a "transaction" of artists and applying three complementary mining techniques — community detection, association rules, and sequential pattern mining — to a single shared map of artist communities. The unifying insight is that the same handful of artists keeps surfacing as **bridges** across all three lenses, suggesting a robust, interpretable foundation for community-aware music discovery and recommendation.
 
-## Checkpoint Summaries
+---
 
-### Checkpoint 1 — Exploratory Data Analysis
+## Research questions
 
-Compared three candidate datasets, selected Last.fm 1K, and performed comprehensive EDA on a 150-user sample (3.3M events, 141K sessions).
+A single overarching question drives the project:
 
-**Key findings:**
-- **Power-law popularity:** Top 1% of artists account for ~48% of all listening events
-- **Session structure:** Median 3 unique artists/session; 68% have 2+ artists
-- **Co-occurrence graph:** Artist clusters visible; Radiohead, The Cure, Death Cab as top hubs
-- **Sparsity:** 98.2% user-artist matrix sparsity — low support thresholds required
-- **Temporal patterns:** Evening peak (6–7 PM), weekday > weekend
+> **Do music listening sessions reveal coherent artist communities, and what distinguishes the artists that bridge them?**
 
-### Checkpoint 2 — Research Question Formation
+It decomposes into:
 
-Defined three research questions unified under a single overarching investigation of artist community structure:
-
-| RQ | Role | Method | Category |
+| RQ | Focus | Algorithm(s) | Category |
 |---|---|---|---|
-| **RQ1:** Association rules across support thresholds | Community characterization | FP-Growth, Apriori | Course |
-| **RQ2:** Community structure and PageRank bridges | **Centerpiece** | Louvain, PageRank | Course |
-| **RQ3:** Sequential patterns within/across communities | Temporal dynamics | PrefixSpan | Beyond-course |
+| **RQ1** | What within- vs. cross-community co-listening rules emerge? | FP-Growth, Apriori | Course |
+| **RQ2** | **(Centerpiece)** Are communities non-random, and which artists bridge them? | Louvain, PageRank | Course |
+| **RQ3** | Do sequential patterns reveal structure unordered itemsets miss? | PrefixSpan | **Beyond-course** |
 
-**Feasibility confirmed:** All methods tested — 725 itemsets + 838 rules, 4 communities with modularity 0.233 (z=7.10 vs. random), 33 sequential patterns.
+---
 
-## Reproducing the Analysis
+## Headline results
+
+| | |
+|---|---|
+| Listening events analyzed | **3.3 M** (150-user sample of 19.15 M total) |
+| Sessions reconstructed | **141,616** (96,269 with 2+ artists) |
+| Artist communities (Louvain) | **4** |
+| Modularity vs. random baseline | **0.233** vs. **0.191 ± 0.006** → **z = 7.10** |
+| Frequent itemsets (FP-Growth, sup ≥ 0.005) | **725** |
+| Association rules (lift ≥ 1.0) | **838**; top lift ≈ **63.8** |
+| Sequential patterns (PrefixSpan) | **33** |
+| Top bridge artists (PageRank, all 4 communities) | **Radiohead, Death Cab For Cutie, The Cure, U2, Metallica** |
+
+The full analysis, figures, and discussion are in [`main_notebook.ipynb`](main_notebook.ipynb).
+
+---
+
+## Data
+
+**Last.fm Dataset 1K** (Celma, 2010) — 19.15 M timestamped listening events, 992 users, ~177 K unique artists, ~960 K unique tracks, plus user demographic profiles.
+
+- **Source:** http://ocelma.net/MusicRecommendationDataset/lastfm-1K.html
+- **Mirror used:** http://mtg.upf.edu/static/datasets/last.fm/lastfm-dataset-1K.tar.gz
+- **Size:** ~672 MB compressed, ~2.4 GB unpacked — **not committed to this repo**.
+- **License:** Non-commercial research use.
+
+### Downloading the data
 
 ```bash
-# 1. Clone the repository
+curl -L -o data/lastfm-dataset-1K.tar.gz \
+  "http://mtg.upf.edu/static/datasets/last.fm/lastfm-dataset-1K.tar.gz"
+tar xzf data/lastfm-dataset-1K.tar.gz -C data/
+```
+
+Full instructions: [`data/README.md`](data/README.md).
+
+### Preprocessing (in-notebook)
+
+1. **Sample** 150 users with a deterministic seed (≈ 3.3 M events, keeps mining tractable while preserving long-tail structure).
+2. **Sort** events chronologically per user.
+3. **Segment** into sessions with a 30-minute inactivity gap (standard MIR threshold).
+4. **Build** per-session artist baskets — the transactions consumed by all three mining methods.
+
+These steps run from a single cell in each notebook.
+
+---
+
+## How to reproduce
+
+The project was developed locally in **VS Code** with **Python 3.14.0** and a project-local `.venv`. To reproduce end-to-end:
+
+```bash
+# 1. Clone
 git clone https://github.com/bmr-ramos/CSCE676-MusicMining.git
 cd CSCE676-MusicMining
 
-# 2. Install dependencies
-pip install -r "Checkpoint 1/requirements.txt"
-pip install mlxtend prefixspan python-louvain  # Additional Checkpoint 2 packages
+# 2. (Optional) Create a virtual environment
+python -m venv .venv
+source .venv/bin/activate
 
-# 3. Download the dataset
-curl -L -o lastfm-dataset-1K.tar.gz "http://mtg.upf.edu/static/datasets/last.fm/lastfm-dataset-1K.tar.gz"
-tar xzf lastfm-dataset-1K.tar.gz
-mv lastfm-dataset-1K "Checkpoint 1/lastfm-dataset-1K"
+# 3. Install dependencies
+pip install -r requirements.txt
 
-# 4. Run notebooks
-jupyter notebook "Checkpoint 1/CSCE676_Checkpoint1_EDA.ipynb"
-jupyter notebook "Checkpoint 2/CSCE676_Checkpoint2_RQ.ipynb"
+# 4. Download the data
+curl -L -o data/lastfm-dataset-1K.tar.gz \
+  "http://mtg.upf.edu/static/datasets/last.fm/lastfm-dataset-1K.tar.gz"
+tar xzf data/lastfm-dataset-1K.tar.gz -C data/
+
+# 5. Open the main notebook
+jupyter notebook main_notebook.ipynb
 ```
 
-## Dependencies
+**Suggested order if you want the full progression:**
+1. [`main_notebook.ipynb`](main_notebook.ipynb) — curated final analysis (start here)
+2. [`checkpoints/checkpoint_1.ipynb`](checkpoints/checkpoint_1.ipynb) — dataset selection & EDA
+3. [`checkpoints/checkpoint_2.ipynb`](checkpoints/checkpoint_2.ipynb) — research-question formation & method feasibility
 
-- Python 3.11+
-- pandas, numpy, matplotlib, seaborn, networkx, scipy
-- mlxtend, prefixspan, python-louvain (Checkpoint 2+)
+The two checkpoint notebooks document the development history; `main_notebook.ipynb` is the consolidated story.
+
+---
+
+## Key dependencies
+
+- **Python 3.14.0** (developed in VS Code with a local `.venv`)
+- `pandas==2.3.3`, `numpy==2.3.5`, `scipy==1.16.3`
+- `matplotlib==3.10.8`, `seaborn==0.13.2`
+- `networkx==3.6.1`, `python-louvain==0.16` *(Louvain community detection)*
+- `mlxtend==0.24.0` *(FP-Growth, Apriori, association rules)*
+- `prefixspan==0.5.2` *(beyond-course: sequential pattern mining)*
+
+Full pinned list in [`requirements.txt`](requirements.txt).
+
+---
+
+## Repository structure
+
+```
+CSCE676-MusicMining/
+├── README.md                       ← this file
+├── main_notebook.ipynb             ← 👉 curated final deliverable (start here)
+├── requirements.txt                ← pinned Python dependencies
+├── .gitignore
+│
+├── checkpoints/                    ← progression of work over the semester
+│   ├── checkpoint_1.ipynb          ← dataset selection + EDA
+│   ├── checkpoint_2.ipynb          ← research-question formation + method feasibility
+│   ├── checkpoint_1_brief.txt      ← Checkpoint 1 assignment brief (context)
+│   └── checkpoint_2_brief.txt      ← Checkpoint 2 assignment brief (context)
+│
+├── data/                           ← raw data (gitignored — see data/README.md)
+│   └── README.md                   ← download instructions
+│
+└── assets/                         ← saved figures from each checkpoint
+    ├── figures_checkpoint_1/       ← 15 EDA plots
+    └── figures_checkpoint_2/       ← 3 RQ-formation plots
+```
+
+> All analysis code lives inline in the notebooks — there is no separate `src/` package to import. If the project grows past a single notebook, helpers will be lifted out into `src/`.
+
+---
 
 ## References
 
-- Celma, O. (2010). *Music Recommendation and Discovery in the Long Tail*. Springer.
-- Pei, J. et al. (2001). PrefixSpan: Mining Sequential Patterns Efficiently by Prefix-Projected Pattern Growth. *ICDE 2001*.
-- Blondel, V. D. et al. (2008). Fast unfolding of communities in large networks. *JSMTE*, P10008.
+- Blondel, V. D., Guillaume, J.-L., Lambiotte, R., & Lefebvre, E. (2008). Fast unfolding of communities in large networks. *Journal of Statistical Mechanics*, P10008.
+- Celma, Ò. (2010). *Music Recommendation and Discovery in the Long Tail*. Springer.
+- Pei, J., Han, J., Mortazavi-Asl, B., Pinto, H., Chen, Q., Dayal, U., & Hsu, M.-C. (2001). PrefixSpan: Mining sequential patterns efficiently by prefix-projected pattern growth. *ICDE 2001*.
+- Han, J., Pei, J., & Yin, Y. (2000). Mining frequent patterns without candidate generation. *SIGMOD 2000*. *(FP-Growth)*
+
+---
+
+*This repo is a portfolio piece. If you're a recruiter or hiring manager — thanks for visiting! The 2-minute project video at the top is the fastest tour, and `main_notebook.ipynb` is the deep dive.*

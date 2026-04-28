@@ -1,8 +1,16 @@
 # ============================================================
-# Large data files (Last.fm 1K dataset ~2.4GB + archive ~650MB)
+# Last.fm 1K dataset (~2.4 GB unpacked + ~672 MB archive)
+# Download instructions live in data/README.md
 # ============================================================
-Checkpoint 1/lastfm-dataset-1K/
-Checkpoint 1/lastfm-dataset-1K.tar.gz
+data/lastfm-dataset-1K/
+data/lastfm-dataset-1K.tar.gz
+
+# ============================================================
+# Local-only working files (not for the public repo)
+# ============================================================
+Final Deliverable/
+final_deliverable.pdf
+Video/
 
 # ============================================================
 # Python
@@ -21,7 +29,7 @@ venv/
 env/
 
 # ============================================================
-# Jupyter Notebook
+# Jupyter
 # ============================================================
 .ipynb_checkpoints/
 
